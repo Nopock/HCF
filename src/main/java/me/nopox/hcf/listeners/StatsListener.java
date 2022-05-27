@@ -22,10 +22,13 @@ public class StatsListener implements Listener {
             profile.save();
         });
 
-        profileHandler.getProfile(killer.getUniqueId()).thenAccept(profile -> {
-            profile.setKills(profile.getKills() + 1);
-            profile.setKillstreak(profile.getKillstreak() + 1);
-            profile.save();
-        });
+        if (killer != null) {
+            profileHandler.getProfile(killer.getUniqueId()).thenAccept(profile -> {
+                profile.setKills(profile.getKills() + 1);
+                profile.setKillstreak(profile.getKillstreak() + 1);
+                profile.save();
+            });
+        }
+
     }
 }
