@@ -9,11 +9,8 @@ import java.util.logging.Level;
  */
 public class Stopwatch {
 
-    long current;
+    private final long current = System.currentTimeMillis();
 
-    public Stopwatch() {
-        current = System.currentTimeMillis();
-    }
 
     /**
      * This builds the stopwatch and prints it out to console.
@@ -21,6 +18,6 @@ public class Stopwatch {
      * @param s What gets printed in console
      */
     public void build(String s) {
-        Bukkit.getLogger().log(Level.INFO, "Fetched " + s + " in " + TimeUtils.formatLongIntoDetailedString(System.currentTimeMillis() - current));
+        Bukkit.getLogger().log(Level.INFO, "Fetched " + s + " in " + (System.currentTimeMillis() - current) + "ms");
     }
 }

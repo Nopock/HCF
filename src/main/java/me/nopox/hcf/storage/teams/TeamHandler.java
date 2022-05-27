@@ -4,6 +4,7 @@ import com.mongodb.client.model.Filters;
 import me.nopox.hcf.HCF;
 import me.nopox.hcf.objects.Profile;
 import me.nopox.hcf.objects.Team;
+import me.nopox.hcf.utils.Stopwatch;
 import org.bson.Document;
 
 import java.util.UUID;
@@ -56,9 +57,11 @@ public class TeamHandler {
      * @return CompletableFuture of Team
      */
     private CompletableFuture<Team> getTeamWithFields(String field, Object value) {
+        Stopwatch stopwatch = new Stopwatch();
         return CompletableFuture.supplyAsync( () -> {
             Document doc = plugin.getMongoHandler().getTeams().find(Filters.eq(field, value)).first();
 
+            stopwatch.build("a team");
             return plugin.getGSON().fromJson(doc.toJson(), Team.class);
         });
     }

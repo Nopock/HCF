@@ -58,12 +58,13 @@ public class ProfileHandler {
      * @return CompletableFuture of Profile
      */
     public CompletableFuture<Profile> getProfileWithFields(String field, Object value) {
-        Stopwatch
+        Stopwatch stopwatch = new Stopwatch();
         return CompletableFuture.supplyAsync( () -> {
             Document doc = plugin.getMongoHandler().getProfiles().find(Filters.eq(field, value)).first();
 
+            stopwatch.build("a profile");
             return plugin.getGSON().fromJson(doc.toJson(), Profile.class);
         });
-        stopwatch.stop();
+
     }
 }
