@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.LongSerializationPolicy;
 import lombok.Getter;
 import me.nopox.hcf.commands.LatencyCommand;
+import me.nopox.hcf.listeners.EnderpearlListener;
 import me.nopox.hcf.listeners.StatsListener;
 import me.nopox.hcf.map.MapHandler;
 import me.nopox.hcf.objects.Profile;
@@ -52,6 +53,7 @@ public final class HCF extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new ProfileListener(), this);
         getServer().getPluginManager().registerEvents(new StatsListener(), this);
+        getServer().getPluginManager().registerEvents(new EnderpearlListener(), this);
 
         PaperCommandManager manager = new PaperCommandManager(this);
         manager.registerCommand(new LatencyCommand());
