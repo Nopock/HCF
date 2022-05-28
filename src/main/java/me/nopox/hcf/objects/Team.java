@@ -51,5 +51,15 @@ public class Team {
     }
 
 
+    /**
+     * This checks if a team is raidable (0 Dtr or less)
+     *
+     * @return true if raidable
+     */
+    public boolean isRaidable() {
+        return DTR <= 0;
+    }
+
+
 
 }
