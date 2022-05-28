@@ -7,8 +7,11 @@ import me.nopox.hcf.objects.Profile;
 import me.nopox.hcf.objects.Team;
 import me.nopox.hcf.utils.Stopwatch;
 import org.bson.Document;
+import org.bukkit.Bukkit;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -80,6 +83,17 @@ public class TeamHandler {
 
             return plugin.getGSON().fromJson(doc.toJson(), Team.class);
         });
+    }
+
+    /**
+     * Creates a team
+     */
+    public void create(String name, UUID owner) {
+        Team team = new Team(UUID.randomUUID(), null, name, null, null, 0, 1.01, owner, Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), 0, 0, 0, 0, 0, 0, List.of());
+        team.getMembers().add(owner);
+        team.saveToCache();
+
+        System.out.println("Creating team for " + Bukkit.getPlayer(owner).getName() + " with name " + name + "...");
     }
 
     /**
