@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.logging.Level;
 
@@ -21,20 +22,26 @@ public class ProfileListener implements Listener {
         System.out.println("Player " + player.getName() + " is trying to join.");
         HCF plugin = HCF.getInstance();
 
-        plugin.getProfileHandler().getProfile(player.getUniqueId()).thenAccept(p -> {
+        long pvpTimerLength = plugin.getMapHandler().isSotw() ? 0L : 30 * 1000 * 60;
+
+        plugin.getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(p -> {
             System.out.println("Profile found for " + player.getUniqueId() + ": " + player.getName());
             if (p.getId() == null) {
-                Profile profile = new Profile(player.getUniqueId(), null, player.getName(), 0, 0, 0, 0, 0, 0L);
-                profile.save();
-
-                System.out.println("Profile created for " + player.getUniqueId() + ": " + player.getName());
-
-                return;
+                plugin.getProfileHandler().create(player.getUniqueId().toString(), pvpTimerLength);
             }
-
-            p.setUsername(player.getName());
-            p.save();
         });
 
+        if (plugin.getProfileHandler().getCachedProfiles().get(player.getUniqueId().toString()) == null) {
+            plugin.getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(p -> {
+                plugin.getProfileHandler().getCachedProfiles().put(player.getUniqueId().toString(), p);
+            });
+        }
+
+
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        HCF.getInstance().getProfileHandler().getProfile(event.getPlayer().getUniqueId().toString()).thenAccept(Profile::saveToMongo);
     }
 }

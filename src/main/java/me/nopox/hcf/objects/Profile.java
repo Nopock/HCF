@@ -9,6 +9,7 @@ import me.nopox.hcf.HCF;
 import me.nopox.hcf.utils.Stopwatch;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -22,27 +23,37 @@ import java.util.logging.Level;
 @Data
 @AllArgsConstructor
 public class Profile {
-    private UUID id, teamId;
-    private String username;
+    String id;
+    private UUID teamId;
     private int kills, deaths, lives, killstreak;
     private double balance;
-    private long playtime;
+    private long playtime, pvpTimer;
 
 
     /**
-     * Syncs the profile with the database,
+     * Syncs the profile from the cache with the database,
      * make sure to call this after you have updated the profile.
      */
-    public void save() {
+    public void saveToMongo() {
         Document current = Document.parse(HCF.getInstance().getGSON().toJson(this));
 
         Stopwatch stopwatch = new Stopwatch();
 
         HCF.getInstance().getMongoHandler().getProfiles().replaceOne(Filters.eq("_id", id), current, new ReplaceOptions().upsert(true));
 
-        Bukkit.getLogger().log(Level.INFO, "[Profiles] Saving profile for " + username + " took " + stopwatch.getTime() + "ms");
+        Bukkit.getLogger().log(Level.INFO, "[Profiles] Saving profile to mongoDB for " + Bukkit.getOfflinePlayer(UUID.fromString(id)).getName() + " took " + stopwatch.getTime() + "ms");
 
+        HCF.getInstance().getProfileHandler().setLastLatency(stopwatch.getTime());
 
+    }
+
+    /**
+     * Updates the profile in the cache
+     */
+    public void saveToCache() {
+        Stopwatch stopwatch = new Stopwatch();
+
+        HCF.getInstance().getProfileHandler().getCachedProfiles().put(id, this);
     }
 
 
@@ -54,4 +65,30 @@ public class Profile {
     public CompletableFuture<Team> getTeam() {
         return HCF.getInstance().getTeamHandler().getTeam(teamId);
     }
+
+    /**
+     * Call this whenever a player dies.
+     */
+    public void dispatchDeath() {
+        balance = 0;
+        deaths++;
+        killstreak = 0;
+
+        saveToCache();
+    }
+
+    /**
+     * Call this whenever a player kills another player.
+     */
+    public void dispatchKill(Player victim) {
+        kills++;
+        killstreak++;
+
+        HCF.getInstance().getProfileHandler().getProfile(victim.getUniqueId().toString()).thenAccept(victimProfile -> {
+            balance += victimProfile.getBalance();
+        });
+
+        saveToCache();
+    }
+
 }

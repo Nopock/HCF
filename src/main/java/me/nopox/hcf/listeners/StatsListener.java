@@ -1,6 +1,7 @@
 package me.nopox.hcf.listeners;
 
 import me.nopox.hcf.HCF;
+import me.nopox.hcf.objects.Profile;
 import me.nopox.hcf.storage.profiles.ProfileHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,22 +12,16 @@ public class StatsListener implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        Player dead = event.getEntity();
-        Player killer = dead.getKiller();
+        Player victim = event.getEntity();
+        Player killer = victim.getKiller();
 
         ProfileHandler profileHandler = HCF.getInstance().getProfileHandler();
 
-        profileHandler.getProfile(dead.getUniqueId()).thenAccept(profile -> {
-            profile.setDeaths(profile.getDeaths() + 1);
-            profile.setKillstreak(0);
-            profile.save();
-        });
+        profileHandler.getProfile(victim.getUniqueId().toString()).thenAccept(Profile::dispatchDeath);
 
         if (killer != null) {
-            profileHandler.getProfile(killer.getUniqueId()).thenAccept(profile -> {
-                profile.setKills(profile.getKills() + 1);
-                profile.setKillstreak(profile.getKillstreak() + 1);
-                profile.save();
+            profileHandler.getProfile(killer.getUniqueId().toString()).thenAccept(profile -> {
+                profile.dispatchKill(victim);
             });
         }
 

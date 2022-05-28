@@ -1,16 +1,21 @@
 package me.nopox.hcf.objects;
 
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.UpdateOptions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import me.nopox.hcf.HCF;
+import me.nopox.hcf.utils.Stopwatch;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * Represents a team in the game.
@@ -35,10 +40,16 @@ public class Team {
      */
     public void save() {
         Document current = Document.parse(HCF.getInstance().getGSON().toJson(this));
-        Document update = new Document("$set", current);
 
-        HCF.getInstance().getMongoHandler().getTeams().updateOne(new Document("_id", id), update, (new UpdateOptions()).upsert(true));
+        Stopwatch stopwatch = new Stopwatch();
+
+        HCF.getInstance().getMongoHandler().getTeams().replaceOne(Filters.eq("_id", id), current, new ReplaceOptions().upsert(true));
+
+        Bukkit.getLogger().log(Level.INFO, "[Teams] Saving team for " + id + " took " + stopwatch.getTime() + "ms");
+
+        HCF.getInstance().getTeamHandler().setLastLatency(stopwatch.getTime());
     }
+
 
 
 }

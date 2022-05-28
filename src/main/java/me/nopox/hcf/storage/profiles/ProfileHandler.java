@@ -1,6 +1,7 @@
 package me.nopox.hcf.storage.profiles;
 
 import com.mongodb.client.model.Filters;
+import lombok.Getter;
 import me.nopox.hcf.HCF;
 import me.nopox.hcf.objects.Profile;
 import me.nopox.hcf.utils.CC;
@@ -8,6 +9,7 @@ import me.nopox.hcf.utils.Stopwatch;
 import org.bson.Document;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -22,32 +24,23 @@ import java.util.concurrent.CompletableFuture;
  */
 public class ProfileHandler {
 
+    private long lastLatency;
+
     private final HCF plugin = HCF.getInstance();
 
-    /**
-     * This returns a profile from MongoDB by Username
-     * It searches using the {@link #getProfileWithFields(String, Object)}
-     *
-     * @param name The user's Username that we search for.
-     *
-     * @return CompletableFuture of Profile
-     */
-    public CompletableFuture<Profile> getProfile(String name) {
-
-        return getProfileWithFields("username", name);
-    }
+    @Getter public HashMap<String, Profile> cachedProfiles = new HashMap<>();
 
 
     /**
      * This returns a profile from MongoDB by UUID
      * It searches using the {@link #getProfileWithFields(String, Object)}
      *
-     * @param uuid The user's UUID that we search for.
+     * @param id The user's UUID that we search for.
      *
      * @return CompletableFuture of Profile
      */
-    public CompletableFuture<Profile> getProfile(UUID uuid) {
-        return getProfileWithFields("uuid", uuid);
+    public CompletableFuture<Profile> getProfile(String id) {
+        return getProfileWithFields("_id", id);
     }
 
 
@@ -60,6 +53,9 @@ public class ProfileHandler {
     public CompletableFuture<Profile> getProfileWithFields(String field, Object value) {
         Stopwatch stopwatch = new Stopwatch();
         return CompletableFuture.supplyAsync( () -> {
+            if (cachedProfiles.containsKey(value)) {
+                return cachedProfiles.get(value);
+            }
             Document doc = plugin.getMongoHandler().getProfiles().find(Filters.eq(field, value)).first();
 
             stopwatch.build("a profile");
@@ -71,5 +67,37 @@ public class ProfileHandler {
             return plugin.getGSON().fromJson(doc.toJson(), Profile.class);
         });
 
+    }
+
+    /**
+     * This returns the amount of Profiles that exist inside MongoDB
+     *
+     * @return Amount of Profiles
+     */
+    public long getProfileCount() {
+        return plugin.getMongoHandler().getProfiles().estimatedDocumentCount();
+    }
+
+    /**
+     * @return Last latency of the database
+     */
+    public long getLastLatency() {
+        return this.lastLatency;
+    }
+
+
+    /**
+     * This sets the last latency of the database
+     */
+    public void setLastLatency(long latency) {
+        this.lastLatency = latency;
+    }
+
+    /**
+     * Creates a new profile for the user
+     */
+    public void create(String id, long pvpTimer) {
+        Profile profile = new Profile(id, null, 0, 0, 0, 0,0, 0, pvpTimer);
+        profile.saveToCache();
     }
 }

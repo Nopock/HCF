@@ -21,6 +21,8 @@ import java.util.concurrent.ExecutionException;
  */
 public class TeamHandler {
 
+    private long lastLatency;
+
     private final HCF plugin = HCF.getInstance();
 
     /**
@@ -64,5 +66,29 @@ public class TeamHandler {
             stopwatch.build("a team");
             return plugin.getGSON().fromJson(doc.toJson(), Team.class);
         });
+    }
+
+    /**
+     * This returns the amount of Teams that exist inside MongoDB
+     *
+     * @return Amount of Teams
+     */
+    public long getTeamCount() {
+        return plugin.getMongoHandler().getTeams().estimatedDocumentCount();
+    }
+
+    /**
+     * @return Last latency of the database
+     */
+    public long getLastLatency() {
+        return this.lastLatency;
+    }
+
+
+    /**
+     * This sets the last latency of the database
+     */
+    public void setLastLatency(long latency) {
+        this.lastLatency = latency;
     }
 }

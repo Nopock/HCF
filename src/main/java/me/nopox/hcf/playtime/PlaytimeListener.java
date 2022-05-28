@@ -27,9 +27,9 @@ public class PlaytimeListener implements Listener {
 
         long playtime = System.currentTimeMillis() - joined.get(player.getUniqueId());
 
-        HCF.getInstance().getProfileHandler().getProfile(player.getUniqueId()).thenAccept(profile -> {
+        HCF.getInstance().getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(profile -> {
             profile.setPlaytime(profile.getPlaytime() + playtime);
-            profile.save();
+            profile.saveToMongo();
         });
     }
 }

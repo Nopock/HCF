@@ -1,10 +1,13 @@
 package me.nopox.hcf;
 
+import co.aikar.commands.PaperCommandManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.LongSerializationPolicy;
 import lombok.Getter;
+import me.nopox.hcf.commands.LatencyCommand;
 import me.nopox.hcf.listeners.StatsListener;
+import me.nopox.hcf.map.MapHandler;
 import me.nopox.hcf.storage.MongoHandler;
 import me.nopox.hcf.storage.profiles.ProfileHandler;
 import me.nopox.hcf.storage.profiles.ProfileListener;
@@ -19,6 +22,7 @@ public final class HCF extends JavaPlugin {
     private MongoHandler mongoHandler;
     private ProfileHandler profileHandler;
     private TeamHandler teamHandler;
+    private MapHandler mapHandler;
 
     private final Gson GSON = new GsonBuilder()
             .setLongSerializationPolicy(LongSerializationPolicy.STRING)
@@ -35,8 +39,13 @@ public final class HCF extends JavaPlugin {
 
         teamHandler = new TeamHandler();
 
+        mapHandler = new MapHandler();
+
         getServer().getPluginManager().registerEvents(new ProfileListener(), this);
         getServer().getPluginManager().registerEvents(new StatsListener(), this);
+
+        PaperCommandManager manager = new PaperCommandManager(this);
+        manager.registerCommand(new LatencyCommand());
     }
 
     @Override
