@@ -6,11 +6,14 @@ import com.mongodb.client.model.UpdateOptions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import me.nopox.hcf.HCF;
+import me.nopox.hcf.utils.CC;
 import me.nopox.hcf.utils.Stopwatch;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Set;
@@ -77,6 +80,53 @@ public class Team {
      */
     public void delete() {
         HCF.getInstance().getMongoHandler().getTeams().deleteOne(Filters.eq("_id", id));
+    }
+
+    /**
+     * Sends a message to the team
+     */
+    public void sendTeamMessage(String message) {
+        for (UUID uuid : members) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null) continue;
+
+            player.sendMessage(CC.translate(message));
+        }
+    }
+
+    /**
+     * Send a component to the team
+     */
+    public void sendTeamMessage(TextComponent message) {
+        for (UUID uuid : members) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null) continue;
+
+            player.spigot().sendMessage(message);
+        }
+    }
+
+    /**
+     * Sends a message to the team
+     */
+    public void sendTeamMessage(String[] messages) {
+        for (UUID uuid : members) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null) continue;
+
+            for (String message : messages) {
+                player.sendMessage(CC.translate(message));
+            }
+        }
+    }
+
+    /**
+     * Sends a message to the teams ally
+     */
+    public void sendAllyMessage(String message) {
+        sendTeamMessage(message);
+
+        HCF.getInstance().getTeamHandler().getTeam(ally).thenAccept(team -> team.sendTeamMessage(message));
     }
 
 

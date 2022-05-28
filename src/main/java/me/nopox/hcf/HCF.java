@@ -63,7 +63,6 @@ public final class HCF extends JavaPlugin {
                 profile.saveToMongo();
                 profile.getTeam().thenAccept(Team::saveToMongo);
             });
-
-
+        }
     }
 }
