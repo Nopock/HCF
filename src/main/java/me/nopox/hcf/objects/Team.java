@@ -8,16 +8,13 @@ import lombok.Data;
 import me.nopox.hcf.HCF;
 import me.nopox.hcf.utils.CC;
 import me.nopox.hcf.utils.Stopwatch;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -83,52 +80,40 @@ public class Team {
     }
 
     /**
-     * Sends a message to the team
+     * This sends a player to a team's information.
+     * @param player
      */
-    public void sendTeamMessage(String message) {
-        for (UUID uuid : members) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player == null) continue;
+    public void sendTeamInformation(Player player){
 
-            player.sendMessage(message);
+        String line = "&7&m---------------------------------------";
+        String homeString = (getHQ() == null ? "Not set" : getHQ().getBlock() + "&7, &r" +  getHQ().getBlockZ());
+
+        StringBuilder coleaders = new StringBuilder(CC.translate("&eCo-Leaders&f:"));
+        StringBuilder captains = new StringBuilder(CC.translate("&eCaptains&f:"));
+        StringBuilder members = new StringBuilder(CC.translate("&eMembers&f:"));
+
+
+
+        // This is for when we do regions.
+        if (getLeader() == null){
+            player.sendMessage(CC.translate(line));
+            player.sendMessage(CC.translate("&6&l" + getName())); // We have to add the color here. (I won't do it for right now)
+            player.sendMessage(CC.translate("&eHQ: &r" + homeString));
+            player.sendMessage(CC.translate(line));
+            return;
         }
+
+
+        player.sendMessage(CC.translate(line));
+        player.sendMessage(CC.translate("&6&l" + name + " &7[" + getOnlineMembers().size() + "/" + this.members.size() + "] &7- &6HQ&r: " + homeString));
     }
 
-    /**
-     * Send a component to the team
-     */
-    public void sendTeamMessage(TextComponent message) {
-        for (UUID uuid : members) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player == null) continue;
+    public Collection<Player> getOnlineMembers(){
+        List<Player> online = new ArrayList<>();
 
-            player.spigot().sendMessage(message);
-        }
+        return null;
+
     }
-
-    /**
-     * Sends a message to the team
-     */
-    public void sendTeamMessage(String[] messages) {
-        for (UUID uuid : members) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player == null) continue;
-
-            for (String message : messages) {
-                player.sendMessage(message);
-            }
-        }
-    }
-
-    /**
-     * Sends a message to the teams ally
-     */
-    public void sendAllyMessage(String message) {
-        sendTeamMessage(message);
-
-        HCF.getInstance().getTeamHandler().getTeam(ally).thenAccept(team -> team.sendTeamMessage(message));
-    }
-
 
 
 }
