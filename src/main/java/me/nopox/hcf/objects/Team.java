@@ -60,6 +60,13 @@ public class Team {
         return DTR <= 0;
     }
 
+    /**
+     * This deletes the team.
+     */
+    public void delete() {
+        HCF.getInstance().getMongoHandler().getTeams().deleteOne(Filters.eq("_id", id));
+    }
+
 
 
 }
