@@ -12,26 +12,25 @@ import java.util.UUID;
 
 public class PlaytimeListener implements Listener {
 
-    private final HashMap<UUID, Long> joined = new HashMap<>();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        joined.put(player.getUniqueId(), System.currentTimeMillis());
+        HCF.getInstance().getPlayerCache().put(player.getUniqueId().toString(), System.currentTimeMillis());
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        long playtime = System.currentTimeMillis() - joined.get(player.getUniqueId());
+        long playtime = System.currentTimeMillis() - HCF.getInstance().getPlayerCache().get(player.getUniqueId().toString());
 
         HCF.getInstance().getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(profile -> {
             profile.setPlaytime(profile.getPlaytime() + playtime);
             profile.saveToMongo();
         });
 
-        joined.remove(player.getUniqueId());
+        HCF.getInstance().getPlayerCache().remove(player.getUniqueId().toString());
     }
 }

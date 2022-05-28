@@ -19,10 +19,11 @@ public class ProfileListener implements Listener {
 
     @EventHandler
     public void onJoin(AsyncPlayerPreLoginEvent player) {
-        System.out.println("Player " + player.getName() + " is trying to join.");
         HCF plugin = HCF.getInstance();
 
         long pvpTimerLength = plugin.getMapHandler().isSotw() ? 0L : 30 * 1000 * 60;
+
+        System.out.println(plugin.getProfileHandler().getCachedProfiles().toString());
 
         plugin.getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(p -> {
             System.out.println("Profile found for " + player.getUniqueId() + ": " + player.getName());
@@ -31,13 +32,11 @@ public class ProfileListener implements Listener {
             }
         });
 
-        if (plugin.getProfileHandler().getCachedProfiles().get(player.getUniqueId().toString()) == null) {
+        if (!plugin.getProfileHandler().getCachedProfiles().containsKey(player.getUniqueId().toString())) {
             plugin.getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(p -> {
                 plugin.getProfileHandler().getCachedProfiles().put(player.getUniqueId().toString(), p);
             });
         }
-
-
     }
 
     @EventHandler

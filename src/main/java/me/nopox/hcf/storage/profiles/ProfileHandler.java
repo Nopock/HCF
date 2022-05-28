@@ -98,6 +98,7 @@ public class ProfileHandler {
      * Creates a new profile for the user
      */
     public void create(String id, long pvpTimer) {
+        System.out.println("Creating profile for " + id);
         Profile profile = new Profile(id, null, 0, 0, 0, 0,0, 0, pvpTimer);
         profile.saveToCache();
     }

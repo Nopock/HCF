@@ -16,8 +16,13 @@ import me.nopox.hcf.storage.teams.TeamHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 @Getter
 public final class HCF extends JavaPlugin {
+
+    private final HashMap<String, Long> playerCache = new HashMap<>();
 
     @Getter private static HCF instance;
 

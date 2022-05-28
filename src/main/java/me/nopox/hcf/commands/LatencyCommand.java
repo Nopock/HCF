@@ -4,11 +4,13 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import me.nopox.hcf.HCF;
 import me.nopox.hcf.utils.CC;
+import me.nopox.hcf.utils.acf.AutoRegister;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
 
+@AutoRegister
 public class LatencyCommand extends BaseCommand {
 
     @CommandAlias("latency")
