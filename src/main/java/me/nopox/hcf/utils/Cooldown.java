@@ -48,7 +48,7 @@ public class Cooldown {
      * Cooldown:
      *
      * Cooldown cooldown = new Cooldown();
-     * 
+     *
      * cooldown.registerCooldown("cooldown";
      *
      *

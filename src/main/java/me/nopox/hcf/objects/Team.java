@@ -161,5 +161,17 @@ public class Team {
         }
     }
 
+    /**
+     * This sends a message to all online members of the ally.
+     *
+     * @param message The message to send to the team and the ally
+     */
+    public void sendAllyMessage(String message){
+        HCF.getInstance().getTeamHandler().getTeam(getAlly()).thenAccept(team -> {
+            team.sendTeamMessage(message);
+        });
+        sendTeamMessage(message);
+    }
+
 
 }
