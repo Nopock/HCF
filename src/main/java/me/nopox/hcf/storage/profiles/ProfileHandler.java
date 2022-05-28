@@ -54,11 +54,12 @@ public class ProfileHandler {
         Stopwatch stopwatch = new Stopwatch();
         return CompletableFuture.supplyAsync( () -> {
             if (cachedProfiles.containsKey(value)) {
+                stopwatch.build("profile for " + value + " found in Cache");
                 return cachedProfiles.get(value);
             }
             Document doc = plugin.getMongoHandler().getProfiles().find(Filters.eq(field, value)).first();
 
-            stopwatch.build("a profile");
+            stopwatch.build("profile for " + value + " found in MongoDB");
 
             if (doc == null) {
                 return null;

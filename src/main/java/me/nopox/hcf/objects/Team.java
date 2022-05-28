@@ -51,7 +51,7 @@ public class Team {
     }
 
 
-    /**
+    /**7
      * This checks if a team is raidable (0 Dtr or less)
      *
      * @return true if raidable

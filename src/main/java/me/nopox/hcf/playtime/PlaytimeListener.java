@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class PlaytimeListener implements Listener {
 
-    private HashMap<UUID, Long> joined = new HashMap<>();
+    private final HashMap<UUID, Long> joined = new HashMap<>();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
@@ -31,5 +31,7 @@ public class PlaytimeListener implements Listener {
             profile.setPlaytime(profile.getPlaytime() + playtime);
             profile.saveToMongo();
         });
+
+        joined.remove(player.getUniqueId());
     }
 }
