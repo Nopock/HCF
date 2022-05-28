@@ -45,6 +45,13 @@ public class Cooldown {
     /**
      * Call this to create a new cooldown.
      *
+     * Cooldown:
+     *
+     * Cooldown cooldown = new Cooldown();
+     * 
+     * cooldown.registerCooldown("cooldown";
+     *
+     *
      * @param cooldown The name of the cooldown.
      */
     public void registerCooldown(String cooldown) {
