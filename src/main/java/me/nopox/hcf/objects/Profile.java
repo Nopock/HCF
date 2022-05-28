@@ -1,13 +1,17 @@
 package me.nopox.hcf.objects;
 
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.UpdateOptions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import me.nopox.hcf.HCF;
 import org.bson.Document;
+import org.bukkit.Bukkit;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 
 /**
  * The profile of a player.
@@ -29,9 +33,10 @@ public class Profile {
      */
     public void save() {
         Document current = Document.parse(HCF.getInstance().getGSON().toJson(this));
-        Document update = new Document("$set", current);
 
-        HCF.getInstance().getMongoHandler().getProfiles().updateOne(new Document("_id", id), update, (new UpdateOptions()).upsert(true));
+        Bukkit.getLogger().log(Level.INFO, "[Profiles] Saving profile for " + username);
+
+        HCF.getInstance().getMongoHandler().getProfiles().replaceOne(Filters.eq("_id", id), current, new ReplaceOptions().upsert(true));
     }
 
 

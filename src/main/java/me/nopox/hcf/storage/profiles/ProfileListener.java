@@ -8,25 +8,33 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.logging.Level;
+
 /**
  * @author Nopox
  */
 public class ProfileListener implements Listener {
 
+
     @EventHandler
     public void onJoin(AsyncPlayerPreLoginEvent player) {
+        System.out.println("Player " + player.getName() + " is trying to join.");
         HCF plugin = HCF.getInstance();
+
         plugin.getProfileHandler().getProfile(player.getUniqueId()).thenAccept(p -> {
-                    if (p == null) {
-                        Profile profile = new Profile(player.getUniqueId(), null, player.getName(), 0, 0, 0, 0, 2.00);
-                        profile.save();
-                    }
+            System.out.println("Profile found for " + player.getUniqueId() + ": " + player.getName());
+            if (p.getId() == null) {
+                Profile profile = new Profile(player.getUniqueId(), null, player.getName(), 0, 0, 0, 0, 0);
+                profile.save();
+
+                System.out.println("Profile created for " + player.getUniqueId() + ": " + player.getName());
+
+                return;
+            }
+
+            p.setUsername(player.getName());
+            p.save();
         });
 
-
-        plugin.getProfileHandler().getProfile(player.getUniqueId()).thenAccept(profile ->  {
-            profile.setUsername(player.getName());
-            profile.save();
-        });
     }
 }

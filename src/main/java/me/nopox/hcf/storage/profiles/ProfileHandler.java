@@ -63,6 +63,11 @@ public class ProfileHandler {
             Document doc = plugin.getMongoHandler().getProfiles().find(Filters.eq(field, value)).first();
 
             stopwatch.build("a profile");
+
+            if (doc == null) {
+                return null;
+            }
+
             return plugin.getGSON().fromJson(doc.toJson(), Profile.class);
         });
 
