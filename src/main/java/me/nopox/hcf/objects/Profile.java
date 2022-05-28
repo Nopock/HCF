@@ -29,11 +29,11 @@ public class Profile {
     private double balance;
     private long playtime, pvpTimer;
 
-
     /**
      * Syncs the profile from the cache with the database,
      * make sure to call this after you have updated the profile.
      */
+    @Deprecated
     public void saveToMongo() {
         Document current = Document.parse(HCF.getInstance().getGSON().toJson(this));
 

@@ -38,7 +38,8 @@ public class Team {
      * Syncs a team with the database,
      * make sure to call this after you have updated a team.
      */
-    public void save() {
+    @Deprecated
+    public void saveToMongo() {
         Document current = Document.parse(HCF.getInstance().getGSON().toJson(this));
 
         Stopwatch stopwatch = new Stopwatch();
@@ -48,6 +49,17 @@ public class Team {
         Bukkit.getLogger().log(Level.INFO, "[Teams] Saving team for " + id + " took " + stopwatch.getTime() + "ms");
 
         HCF.getInstance().getTeamHandler().setLastLatency(stopwatch.getTime());
+    }
+
+    /**
+     * Updates the profile in the cache
+     */
+    public void saveToCache() {
+        Stopwatch stopwatch = new Stopwatch();
+
+        HCF.getInstance().getTeamHandler().getCachedTeams().put(id.toString(), this);
+
+        Bukkit.getLogger().log(Level.INFO, "[Teams] Saving team to cache for " + name + " took " + stopwatch.getTime() + "ms");
     }
 
 
