@@ -14,15 +14,12 @@ import java.util.Date;
 public class LatencyCommand extends BaseCommand {
 
     @CommandAlias("latency")
-    public void onLatency(CommandSender sender) {
-
-        sender.sendMessage(CC.translate("&6&lHCF Database Latency"));
-        sender.sendMessage(CC.translate("&7&m-----------------------------"));
-        sender.sendMessage(CC.translate("&7Profiles << &6" + HCF.getInstance().getProfileHandler().getLastLatency() + "ms"));
-        sender.sendMessage(CC.translate("&7Teams << &6" + HCF.getInstance().getTeamHandler().getLastLatency() + "ms"));
-        sender.sendMessage(CC.translate("&c"));
-        sender.sendMessage(CC.translate("&7" + HCF.getInstance().getProfileHandler().getCachedProfiles().size() + " Profiles Cached in Memory"));
-        sender.sendMessage(CC.translate("&7&m-----------------------------"));
-
+    public void onLatency(CommandSender player) {
+        player.sendMessage(CC.translate("&7&m-----------------------------------------"));
+        player.sendMessage(CC.translate("&6&lHCF &7┃ &fLatency")); //TODO: Change this line when we're on 1.17
+        player.sendMessage(CC.translate(""));
+        player.sendMessage(CC.translate("&eProfiles&7: &r" + HCF.getInstance().getProfileHandler().getLastLatency() + "ms"));
+        player.sendMessage(CC.translate("&eTeams&7: &r" + HCF.getInstance().getTeamHandler().getLastLatency() + "ms"));
+        player.sendMessage(CC.translate("&7&m-----------------------------------------"));
     }
 }

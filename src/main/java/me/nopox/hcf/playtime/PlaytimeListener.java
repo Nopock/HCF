@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class PlaytimeListener implements Listener {
+public class    PlaytimeListener implements Listener {
 
 
     @EventHandler

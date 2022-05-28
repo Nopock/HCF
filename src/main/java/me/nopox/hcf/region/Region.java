@@ -1,9 +1,9 @@
-package me.nopox.hcf.bitmask;
+package me.nopox.hcf.region;
 
 import lombok.Getter;
 
 @Getter
-public enum Bitmask {
+public enum Region {
 
     // Used in spawns
     SAFE_ZONE(1, "Safe-Zone", "Determines if a region is considered completely safe"),
@@ -29,7 +29,7 @@ public enum Bitmask {
     private int dtr;
     private String name, description;
 
-    Bitmask(int dtr, String name, String description) {
+    Region(int dtr, String name, String description) {
         this.dtr = dtr;
         this.name = name;
         this.description = description;
