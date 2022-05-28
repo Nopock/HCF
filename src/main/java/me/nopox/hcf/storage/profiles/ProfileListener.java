@@ -23,9 +23,6 @@ public class ProfileListener implements Listener {
 
         long pvpTimerLength = plugin.getMapHandler().isSotw() ? 0L : 30 * 1000 * 60;
 
-        System.out.println(plugin.getProfileHandler().getCachedProfiles().toString());
-        System.out.println(plugin.getProfileHandler().getCachedProfiles().containsKey(player.getUniqueId().toString()));
-
 
         plugin.getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(p -> {
             System.out.println("Profile found for " + player.getUniqueId() + ": " + player.getName());

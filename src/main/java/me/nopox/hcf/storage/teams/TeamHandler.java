@@ -1,16 +1,19 @@
 package me.nopox.hcf.storage.teams;
 
 import com.mongodb.client.model.Filters;
+import lombok.Getter;
 import me.nopox.hcf.HCF;
 import me.nopox.hcf.objects.Profile;
 import me.nopox.hcf.objects.Team;
 import me.nopox.hcf.utils.Stopwatch;
 import org.bson.Document;
 
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+@Getter
 /**
  * This class will return the Team
  * object as a ComepletableFuture<Team>.
@@ -24,6 +27,8 @@ public class TeamHandler {
     private long lastLatency;
 
     private final HCF plugin = HCF.getInstance();
+
+    public HashMap<String, Team> cachedTeams = new HashMap<>();
 
     /**
      * This returns a Team from MongoDB
@@ -61,9 +66,18 @@ public class TeamHandler {
     private CompletableFuture<Team> getTeamWithFields(String field, Object value) {
         Stopwatch stopwatch = new Stopwatch();
         return CompletableFuture.supplyAsync( () -> {
+            if (cachedTeams.containsKey(value.toString())) {
+                stopwatch.build("team for " + value + " found in Cache");
+                return cachedTeams.get(value.toString());
+            }
             Document doc = plugin.getMongoHandler().getTeams().find(Filters.eq(field, value)).first();
 
-            stopwatch.build("a team");
+            stopwatch.build("team for " + value + " found in MongoDB");
+
+            if (doc == null) {
+                return null;
+            }
+
             return plugin.getGSON().fromJson(doc.toJson(), Team.class);
         });
     }
