@@ -6,15 +6,15 @@ import com.mongodb.client.model.UpdateOptions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import me.nopox.hcf.HCF;
+import me.nopox.hcf.utils.CC;
 import me.nopox.hcf.utils.Stopwatch;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -79,6 +79,52 @@ public class Team {
         HCF.getInstance().getMongoHandler().getTeams().deleteOne(Filters.eq("_id", id));
     }
 
+    /**
+     * This sends a player to a team's information.
+     * @param player
+     */
+    public void sendTeamInformation(Player player){
 
+        String line = "&7&m---------------------------------------";
+        String homeString = (getHQ() == null ? "Not set" : getHQ().getBlock() + "&7, &r" +  getHQ().getBlockZ());
+
+        StringBuilder coleaders = new StringBuilder(CC.translate("&eCo-Leaders&f:"));
+        StringBuilder captains = new StringBuilder(CC.translate("&eCaptains&f:"));
+        StringBuilder members = new StringBuilder(CC.translate("&eMembers&f:"));
+
+        /*
+        LATER BECAUSE IM FUCKING LAZY
+        for (UUID uuid : this.members){
+            members.append()
+        }
+         */
+
+        // This is for when we do regions.
+        if (getLeader() == null){
+            player.sendMessage(CC.translate(line));
+            player.sendMessage(CC.translate("&6&l" + getName())); // We have to add the color here. (I won't do it for right now)
+            player.sendMessage(CC.translate("&eHQ: &r" + homeString));
+            player.sendMessage(CC.translate(line));
+            return;
+        }
+
+
+        player.sendMessage(CC.translate(line));
+        player.sendMessage(CC.translate("&6&l" + name + " &7[" + getOnlineMembers().size() + "/" + this.members.size() + "] &7- &6HQ&r: " + homeString));
+    }
+
+    public Collection<Player> getOnlineMembers(){
+        List<Player> online = new ArrayList<>();
+
+        for (UUID uuid : members) {
+            Player player = Bukkit.getPlayer(uuid);
+
+            if (player != null && player.isOnline()){
+                online.add(player);
+            }
+        }
+
+        return online;
+    }
 
 }
