@@ -8,6 +8,7 @@ import lombok.Data;
 import me.nopox.hcf.HCF;
 import me.nopox.hcf.utils.CC;
 import me.nopox.hcf.utils.Stopwatch;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
@@ -113,6 +114,51 @@ public class Team {
 
         return null;
 
+    }
+
+    /**
+     * This sends a message to all online members of the team.
+     *
+     * @param message The message to send to the team
+     */
+    public void sendTeamMessage(String message){
+        for (UUID uuid : members){
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null){
+                player.sendMessage(message);
+            }
+        }
+    }
+
+    /**
+     * This sends a message to all online members of the team.
+     *
+     * @param message The message to send to the team
+     */
+    public void sendTeamMessage(TextComponent message){
+        for (UUID uuid : members){
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null){
+                player.spigot().sendMessage(message);
+            }
+        }
+    }
+
+    /**
+     * This sends a message to all online members of the team.
+     *
+     * @param messages The messages to send to the team
+     */
+    public void sendTeamMessage(String[] messages){
+        for (UUID uuid : members){
+            Player player = Bukkit.getPlayer(uuid);
+
+            if (player != null){
+                for (String message : messages){
+                    player.sendMessage(message);
+                }
+            }
+        }
     }
 
 

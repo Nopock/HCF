@@ -110,5 +110,10 @@
             <artifactId>acf-paper</artifactId> <!-- Don't forget to replace this -->
             <version>0.5.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.ThatKawaiiSam</groupId>
+            <artifactId>Assemble</artifactId>
+            <version>7b446313ba</version>
+        </dependency>
     </dependencies>
 </project>
