@@ -24,7 +24,7 @@ public class ProfileListener implements Listener {
         plugin.getProfileHandler().getProfile(player.getUniqueId()).thenAccept(p -> {
             System.out.println("Profile found for " + player.getUniqueId() + ": " + player.getName());
             if (p.getId() == null) {
-                Profile profile = new Profile(player.getUniqueId(), null, player.getName(), 0, 0, 0, 0, 0);
+                Profile profile = new Profile(player.getUniqueId(), null, player.getName(), 0, 0, 0, 0, 0, 0L);
                 profile.save();
 
                 System.out.println("Profile created for " + player.getUniqueId() + ": " + player.getName());

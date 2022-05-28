@@ -20,4 +20,14 @@ public class Stopwatch {
     public void build(String s) {
         Bukkit.getLogger().log(Level.INFO, "Fetched " + s + " in " + (System.currentTimeMillis() - current) + "ms");
     }
+
+
+    /**
+     * This builds the stopwatch and returns how long it took.
+     *
+     * @return The time in milliseconds
+     */
+    public long getTime() {
+        return System.currentTimeMillis() - current;
+    }
 }

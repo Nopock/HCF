@@ -6,6 +6,7 @@ import com.mongodb.client.model.UpdateOptions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import me.nopox.hcf.HCF;
+import me.nopox.hcf.utils.Stopwatch;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 
@@ -25,6 +26,7 @@ public class Profile {
     private String username;
     private int kills, deaths, lives, killstreak;
     private double balance;
+    private long playtime;
 
 
     /**
@@ -34,9 +36,13 @@ public class Profile {
     public void save() {
         Document current = Document.parse(HCF.getInstance().getGSON().toJson(this));
 
-        Bukkit.getLogger().log(Level.INFO, "[Profiles] Saving profile for " + username);
+        Stopwatch stopwatch = new Stopwatch();
 
         HCF.getInstance().getMongoHandler().getProfiles().replaceOne(Filters.eq("_id", id), current, new ReplaceOptions().upsert(true));
+
+        Bukkit.getLogger().log(Level.INFO, "[Profiles] Saving profile for " + username + " took " + stopwatch.getTime() + "ms");
+
+
     }
 
 
