@@ -21,7 +21,7 @@ public class TeamListener implements Listener {
             if (profile.getTeam() == null) return;
 
             if (!plugin.getTeamHandler().getCachedTeams().containsKey(profile.getTeamId().toString())) {
-                plugin.getTeamHandler().getTeam(profile.getTeamId().toString()).thenAccept(team -> {
+                profile.getTeam().thenAccept(team -> {
                     plugin.getTeamHandler().getCachedTeams().put(profile.getTeamId().toString(), team);
                 });
             }
@@ -37,7 +37,7 @@ public class TeamListener implements Listener {
         plugin.getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(profile -> {
             if (profile.getTeam() == null) return;
 
-            plugin.getTeamHandler().getTeam(profile.getTeamId().toString()).thenAccept(Team::saveToMongo);
+            profile.getTeam().thenAccept(Team::saveToMongo);
         });
     }
 }

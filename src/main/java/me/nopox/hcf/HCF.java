@@ -9,6 +9,7 @@ import me.nopox.hcf.commands.LatencyCommand;
 import me.nopox.hcf.listeners.StatsListener;
 import me.nopox.hcf.map.MapHandler;
 import me.nopox.hcf.objects.Profile;
+import me.nopox.hcf.objects.Team;
 import me.nopox.hcf.storage.MongoHandler;
 import me.nopox.hcf.storage.profiles.ProfileHandler;
 import me.nopox.hcf.storage.profiles.ProfileListener;
@@ -58,7 +59,11 @@ public final class HCF extends JavaPlugin {
     @Override
     public void onDisable() {
         for (Player player : getServer().getOnlinePlayers()) {
-            getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(Profile::saveToMongo);
-        }
+            getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(profile -> {
+                profile.saveToMongo();
+                profile.getTeam().thenAccept(Team::saveToMongo);
+            });
+
+
     }
 }
