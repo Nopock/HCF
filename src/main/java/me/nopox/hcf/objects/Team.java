@@ -90,7 +90,7 @@ public class Team {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) continue;
 
-            player.sendMessage(CC.translate(message));
+            player.sendMessage(message);
         }
     }
 
@@ -115,7 +115,7 @@ public class Team {
             if (player == null) continue;
 
             for (String message : messages) {
-                player.sendMessage(CC.translate(message));
+                player.sendMessage(message);
             }
         }
     }
