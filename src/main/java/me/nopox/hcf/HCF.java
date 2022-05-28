@@ -58,8 +58,7 @@ public final class HCF extends JavaPlugin {
         PaperCommandManager manager = new PaperCommandManager(this);
         manager.registerCommand(new LatencyCommand());
 
-        Cooldown cooldown = new Cooldown();
-        cooldown.registerCooldown("enderpearl");
+        Cooldown.createCooldown("enderpearl");
 
 
 

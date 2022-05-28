@@ -6,92 +6,69 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class Cooldown {
-    private Player player;
-    private String cooldown;
 
-    private final HashMap<String, HashMap<UUID, Long>> cooldowns = new HashMap<>();
+    public static HashMap<String, HashMap<UUID, Long>> cooldown;
 
-    /**
-     * Call this only when you are registering a new cooldown.
-     */
-    public Cooldown() {
-
-    }
-
-    /**
-     * Call this whenever you put a player on cooldown.
-     *
-     * @param player The player to put on cooldown.
-     * @param length The length of the cooldown.
-     * @param cooldown The name of the cooldown.
-     */
-    public Cooldown(Player player, long length, String cooldown) {
-        cooldowns.get(cooldown).put(player.getUniqueId(), System.currentTimeMillis() + length);
-        this.player = player;
-        this.cooldown = cooldown;
-    }
-
-    /**
-     * Call this whenever you want to check if a player is on cooldown.
-     *
-     * @param player The player to check.
-     * @param cooldown The name of the cooldown.
-     */
-    public Cooldown(Player player, String cooldown) {
-        this.player = player;
-        this.cooldown = cooldown;
-    }
-
-    /**
-     * Call this to create a new cooldown.
-     *
-     * Cooldown:
-     *
-     * Cooldown cooldown = new Cooldown();
-     *
-     * cooldown.registerCooldown("cooldown";
-     *
-     *
-     * @param cooldown The name of the cooldown.
-     */
-    public void registerCooldown(String cooldown) {
-        cooldowns.put(cooldown, new HashMap<>());
-    }
-
-    /**
-     * When you call this make sure to access it using
-     * {@link Cooldown#Cooldown(Player, String)}.
-     *
-     * @return True if a player is on cooldown.
-     */
-    public boolean isOnCooldown() {
-        if (!(cooldowns.get(cooldown).get(player.getUniqueId()) > System.currentTimeMillis())) {
-            removeCooldown();
-            return false;
+    public static void createCooldown(final String k) {
+        if (Cooldown.cooldown.containsKey(k)) {
+            throw new IllegalArgumentException("Cooldown already exists.");
         }
-
-        return cooldowns.get(cooldown).containsKey(player.getUniqueId());
+        Cooldown.cooldown.put(k, new HashMap<UUID, Long>());
     }
 
-    /**
-     * This removes the cooldown from the player.
-     */
-    public void removeCooldown() {
-        if (!isOnCooldown()) {
-            throw new IllegalStateException("Player is not on cooldown!");
+    public static HashMap<UUID, Long> getCooldownMap(final String k) {
+        if (Cooldown.cooldown.containsKey(k)) {
+            return Cooldown.cooldown.get(k);
         }
-        cooldowns.get(cooldown).remove(player.getUniqueId());
+        return null;
     }
 
-    /**
-     * @return The remaining time of the cooldown but formatted. (ex. "5m")
-     */
-    public String getFormattedCooldown() {
-        if (!isOnCooldown()) {
-            throw new IllegalStateException("Player is not on cooldown!");
+    public static void addCooldown(final String k, final Player p, final int seconds) {
+        if (!Cooldown.cooldown.containsKey(k)) {
+            throw new IllegalArgumentException(k + " does not exist");
         }
-
-        return TimeUtils.formatLongIntoDetailedString((cooldowns.get(cooldown).get(player.getUniqueId()) - System.currentTimeMillis()) / 1000);
+        final long next = System.currentTimeMillis() + seconds * 1000L;
+        Cooldown.cooldown.get(k).put(p.getUniqueId(), next);
     }
+
+    public static boolean isOnCooldown(final String k, final Player p) {
+        return Cooldown.cooldown.containsKey(k) && Cooldown.cooldown.get(k).containsKey(p.getUniqueId()) && System.currentTimeMillis() <= Cooldown.cooldown.get(k).get(p.getUniqueId());
+    }
+
+    public static boolean isOnCooldown(final String k, final UUID uuid) {
+        return Cooldown.cooldown.containsKey(k) && Cooldown.cooldown.get(k).containsKey(uuid) && System.currentTimeMillis() <= Cooldown.cooldown.get(k).get(uuid);
+    }
+
+    public static int getCooldownForPlayerInt(final String k, final Player p) {
+        return (int)(Cooldown.cooldown.get(k).get(p.getUniqueId()) - System.currentTimeMillis()) / 1000;
+    }
+
+    public static long getCooldownForPlayerLong(final String k, final Player p) {
+        return Cooldown.cooldown.get(k).get(p.getUniqueId()) - System.currentTimeMillis();
+    }
+
+    public static void removeCooldown(final String k, final Player p) {
+        if (!Cooldown.cooldown.containsKey(k)) {
+            throw new IllegalArgumentException(k + " does not exist");
+        }
+        Cooldown.cooldown.get(k).remove(p.getUniqueId());
+    }
+
+    public static void removeCooldown(final String k, final UUID uuid) {
+        if (!Cooldown.cooldown.containsKey(k)) {
+            throw new IllegalArgumentException(k + " does not exist");
+        }
+        Cooldown.cooldown.get(k).remove(uuid);
+    }
+    public static String getCooldownString(Player player, String cooldown){
+        if(!Cooldown.isOnCooldown(cooldown, player)) return "0.0s";
+        return ScoreFunction.TIME_FANCY.apply((float) Cooldown.getCooldownForPlayerLong(cooldown, player) / 1000f);
+    }
+
+    static {
+        Cooldown.cooldown = new HashMap<String, HashMap<UUID, Long>>();
+    }
+
 
 }
+

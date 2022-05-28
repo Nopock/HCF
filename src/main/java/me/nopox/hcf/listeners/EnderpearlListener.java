@@ -17,14 +17,14 @@ public class EnderpearlListener implements Listener {
 
         Player player = (Player) event.getEntity().getShooter();
 
-        Cooldown cooldown = new Cooldown(player, "enderpearl");
 
-        if (cooldown.isOnCooldown()) {
+
+        if (Cooldown.isOnCooldown("enderpearl", player)) {
             event.setCancelled(true);
             return;
         }
 
-        new Cooldown(player, 16 * 1000L, "enderpearl");
+        Cooldown.addCooldown("enderpearl", player, 16);
 
         player.sendMessage(CC.translate("&cYou are now on enderpearl cooldown for &e16 seconds&c."));
     }
