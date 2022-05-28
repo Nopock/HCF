@@ -14,6 +14,7 @@ import me.nopox.hcf.storage.MongoHandler;
 import me.nopox.hcf.storage.profiles.ProfileHandler;
 import me.nopox.hcf.storage.profiles.ProfileListener;
 import me.nopox.hcf.storage.teams.TeamHandler;
+import me.nopox.hcf.utils.Cooldown;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -54,6 +55,12 @@ public final class HCF extends JavaPlugin {
 
         PaperCommandManager manager = new PaperCommandManager(this);
         manager.registerCommand(new LatencyCommand());
+
+        Cooldown cooldown = new Cooldown();
+        cooldown.registerCooldown("enderpearl");
+
+
+
     }
 
     @Override
