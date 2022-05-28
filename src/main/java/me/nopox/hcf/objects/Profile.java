@@ -54,6 +54,8 @@ public class Profile {
         Stopwatch stopwatch = new Stopwatch();
 
         HCF.getInstance().getProfileHandler().getCachedProfiles().put(id, this);
+
+        Bukkit.getLogger().log(Level.INFO, "[Profiles] Saving profile to cache for " + Bukkit.getOfflinePlayer(UUID.fromString(id)).getName() + " took " + stopwatch.getTime() + "ms");
     }
 
 
