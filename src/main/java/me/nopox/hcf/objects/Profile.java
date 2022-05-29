@@ -43,8 +43,6 @@ public class Profile {
 
         Bukkit.getLogger().log(Level.INFO, "[Profiles] Saving profile to mongoDB for " + Bukkit.getOfflinePlayer(UUID.fromString(id)).getName() + " took " + stopwatch.getTime() + "ms");
 
-        HCF.getInstance().getProfileHandler().setLastLatency(stopwatch.getTime());
-
     }
 
     /**

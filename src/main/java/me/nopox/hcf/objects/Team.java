@@ -64,7 +64,6 @@ public class Team {
 
         Bukkit.getLogger().log(Level.INFO, "[Teams] Saving team for " + id + " took " + stopwatch.getTime() + "ms");
 
-        HCF.getInstance().getTeamHandler().setLastLatency(stopwatch.getTime());
     }
 
     /**

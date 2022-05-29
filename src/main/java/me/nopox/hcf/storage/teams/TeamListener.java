@@ -20,6 +20,9 @@ public class TeamListener implements Listener {
             if (profile.getTeamId() == null) return;
 
             profile.getTeam().thenAccept(Team::saveToMongo);
+        }).exceptionally(throwable -> {
+            throwable.printStackTrace();
+            return null;
         });
     }
 }
