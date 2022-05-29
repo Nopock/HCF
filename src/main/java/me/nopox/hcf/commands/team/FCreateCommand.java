@@ -20,14 +20,12 @@ public class FCreateCommand extends BaseCommand {
         HCF.getInstance().getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(profile -> {
             if (profile.getTeamId() != null) {
                 player.sendMessage(ChatColor.RED + "You are already in a faction.");
-                return;
             }
         });
 
         HCF.getInstance().getTeamHandler().getTeam(name).thenAccept(team -> {
             if (team != null) {
                 player.sendMessage(ChatColor.RED + "A team with that name already exists.");
-                return;
             }
         });
 

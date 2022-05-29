@@ -11,18 +11,16 @@ import me.nopox.hcf.listeners.EnderpearlListener;
 import me.nopox.hcf.listeners.StatsListener;
 import me.nopox.hcf.map.MapHandler;
 import me.nopox.hcf.objects.Profile;
-import me.nopox.hcf.objects.Team;
 import me.nopox.hcf.storage.MongoHandler;
 import me.nopox.hcf.storage.profiles.ProfileHandler;
 import me.nopox.hcf.storage.profiles.ProfileListener;
 import me.nopox.hcf.storage.teams.TeamHandler;
-import me.nopox.hcf.storage.teams.TeamListener;
 import me.nopox.hcf.utils.Cooldown;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 @Getter
 public final class HCF extends JavaPlugin {
@@ -54,7 +52,6 @@ public final class HCF extends JavaPlugin {
         mapHandler = new MapHandler();
 
         getServer().getPluginManager().registerEvents(new ProfileListener(), this);
-        getServer().getPluginManager().registerEvents(new TeamListener(), this);
         getServer().getPluginManager().registerEvents(new StatsListener(), this);
         getServer().getPluginManager().registerEvents(new EnderpearlListener(), this);
 
@@ -65,6 +62,12 @@ public final class HCF extends JavaPlugin {
         Cooldown.createCooldown("enderpearl");
 
         getTeamHandler().addAllToCache();
+
+
+        // Syncs all profiles with mongo every 2 minutes
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+            getTeamHandler().saveAllToMongo();
+        }, 0, 20 * 60);
 
 
 

@@ -98,6 +98,7 @@ public class TeamHandler {
         });
 
         team.saveToCache();
+        team.saveToMongo();
 
         System.out.println("Creating team for " + Bukkit.getPlayer(owner).getName() + " with name " + name + "...");
     }
