@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 @Getter
 /**
@@ -89,8 +90,13 @@ public class TeamHandler {
      * Creates a team
      */
     public void create(String name, UUID owner) {
-        Team team = new Team(UUID.randomUUID(), null, name, null, null, 0, 1.01, owner, Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), 0, 0, 0, 0, 0, 0, List.of());
+        Team team = new Team(owner, name);
         team.getMembers().add(owner);
+
+        HCF.getInstance().getProfileHandler().getProfile(owner.toString()).thenAccept(profile -> {
+            profile.joinTeam(team.getId());
+        });
+
         team.saveToCache();
 
         System.out.println("Creating team for " + Bukkit.getPlayer(owner).getName() + " with name " + name + "...");
@@ -118,5 +124,17 @@ public class TeamHandler {
      */
     public void setLastLatency(long latency) {
         this.lastLatency = latency;
+    }
+
+    /**
+     * Adds all the teams to the cache
+     */
+    public void addAllToCache() {
+        Stopwatch stopwatch = new Stopwatch();
+        plugin.getMongoHandler().getTeams().find().forEach((Consumer<Document>) document -> {
+            Team team = plugin.getGSON().fromJson(document.toJson(), Team.class);
+            cachedTeams.put(team.getId().toString(), team);
+        });
+        stopwatch.build("Added all teams to cache");
     }
 }

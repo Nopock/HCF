@@ -93,6 +93,14 @@ public class Profile {
         saveToCache();
     }
 
+    /**
+     * Call this whenever a player joins a team
+     */
+    public void joinTeam(UUID teamId) {
+        this.teamId = teamId;
+        saveToCache();
+    }
+
 
 
 }

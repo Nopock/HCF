@@ -24,16 +24,31 @@ import java.util.logging.Level;
  * @author Nopox
  */
 @Data
-@AllArgsConstructor
 public class Team {
     private UUID id, ally;
     private String name, announcement;
     private Location HQ;
-    private double balance, DTR;
+    private double balance, DTR = 0;
     private UUID leader;
-    private Set<UUID> coleaders, captains, members, invites;
-    private int points, kills, deaths, captures, diamondsMined;
-    private List<Claim> claims;
+    private Set<UUID> coleaders, captains, members, invites = new HashSet<>();
+    private int points, kills, deaths, captures, diamondsMined = 0;
+    private List<Claim> claims = new ArrayList<>();
+
+    public Team(UUID leader, String name) {
+        this.id = UUID.randomUUID();
+        this.leader = leader;
+        this.name = name;
+        this.DTR = 1.01;
+        this.ally = null;
+        this.balance = 0;
+        this.coleaders = new HashSet<>();
+        this.captains = new HashSet<>();
+        this.members = new HashSet<>();
+        this.points = 0;
+        this.kills = 0;
+        this.deaths = 0;
+        this.captures = 0;
+    }
 
     /**
      * Syncs a team with the database,
@@ -59,6 +74,8 @@ public class Team {
         Stopwatch stopwatch = new Stopwatch();
 
         HCF.getInstance().getTeamHandler().getCachedTeams().put(id.toString(), this);
+
+        System.out.println(HCF.getInstance().getTeamHandler().getCachedTeams().size());
 
         Bukkit.getLogger().log(Level.INFO, "[Teams] Saving team to cache for " + name + " took " + stopwatch.getTime() + "ms");
     }

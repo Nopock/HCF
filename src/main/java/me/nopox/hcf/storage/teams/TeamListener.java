@@ -11,24 +11,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class TeamListener implements Listener {
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        HCF plugin = HCF.getInstance();
-
-
-        Player player = event.getPlayer();
-
-        plugin.getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(profile -> {
-            if (profile.getTeam() == null) return;
-
-            if (!plugin.getTeamHandler().getCachedTeams().containsKey(profile.getTeamId().toString())) {
-                profile.getTeam().thenAccept(team -> {
-                    plugin.getTeamHandler().getCachedTeams().put(profile.getTeamId().toString(), team);
-                });
-            }
-        });
-    }
-
-    @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         HCF plugin = HCF.getInstance();
 
