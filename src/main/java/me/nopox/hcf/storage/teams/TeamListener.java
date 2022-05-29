@@ -17,7 +17,7 @@ public class TeamListener implements Listener {
         Player player = event.getPlayer();
 
         plugin.getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(profile -> {
-            if (profile.getTeam() == null) return;
+            if (profile.getTeamId() == null) return;
 
             profile.getTeam().thenAccept(Team::saveToMongo);
         });

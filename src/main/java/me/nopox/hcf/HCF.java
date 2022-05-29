@@ -73,10 +73,9 @@ public final class HCF extends JavaPlugin {
     @Override
     public void onDisable() {
         for (Player player : getServer().getOnlinePlayers()) {
-            getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(profile -> {
-                profile.saveToMongo();
-                profile.getTeam().thenAccept(Team::saveToMongo);
-            });
+            getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(Profile::saveToMongo);
         }
+
+
     }
 }

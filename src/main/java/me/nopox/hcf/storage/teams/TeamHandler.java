@@ -137,4 +137,15 @@ public class TeamHandler {
         });
         stopwatch.build("Added all teams to cache");
     }
+
+    /**
+     * This saves all teams from the cache to MongoDB
+     */
+    public void saveAllToMongo() {
+        Stopwatch stopwatch = new Stopwatch();
+        for (Team team : cachedTeams.values()) {
+            team.saveToMongo();
+        }
+        stopwatch.build("Saved all teams to MongoDB");
+    }
 }
