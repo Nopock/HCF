@@ -76,6 +76,8 @@ public final class HCF extends JavaPlugin {
             getProfileHandler().getProfile(player.getUniqueId().toString()).thenAccept(Profile::saveToMongo);
         }
 
+        getTeamHandler().saveAllToMongo();
+
 
     }
 }
